@@ -18,7 +18,7 @@ HSQUIRRELVM v;
 // Global variables (meh)
 PluginFuncs * gFuncs;
 
-uint8_t OnSquirrelScriptLoad()
+uint8_t HTTP_OnSquirrelScriptLoad()
 {
 	// See if we have any imports from Squirrel
 	size_t size;
@@ -65,11 +65,11 @@ uint8_t OnSquirrelScriptLoad()
 	return 0;
 }
 
-uint8_t OnPluginCommand(uint32_t command_identifier, const char* /*message*/)
+uint8_t HTTP_OnPluginCommand(uint32_t command_identifier, const char* /*message*/)
 {
 	switch( command_identifier )
 	{
-		case 0x7D6E22D8: return OnSquirrelScriptLoad();
+		case 0x7D6E22D8: return HTTP_OnSquirrelScriptLoad();
 
 		default:
 			break;
@@ -78,7 +78,7 @@ uint8_t OnPluginCommand(uint32_t command_identifier, const char* /*message*/)
 	return 1;
 }
 
-uint8_t OnServerInitialise()
+uint8_t HTTP_OnServerInitialise()
 {
 	printf( "\n" );
 	OutputMsg( "Loaded HTTP Requests module for VC:MP 0.4 by Luckshya." );
@@ -98,8 +98,8 @@ EXPORT unsigned int VcmpPluginInit( PluginFuncs* functions, PluginCallbacks* cal
 	gFuncs = functions;
 
 	// Store callback
-	callbacks->OnServerInitialise = OnServerInitialise;
-	callbacks->OnPluginCommand = OnPluginCommand;
+	callbacks->OnServerInitialise = HTTP_OnServerInitialise;
+	callbacks->OnPluginCommand = HTTP_OnPluginCommand;
 
 	// Done!
 	return 1;
