@@ -36,7 +36,7 @@ namespace HTTP {
 			return sq_throwerror(vm, "Invalid HTTP::Request instance");
 		}
 
-		else if (empty(request->url)) {
+		else if (std::empty(request->url)) {
 			return sq_throwerror(vm, "Invalid URL in request object");
 		}
 
