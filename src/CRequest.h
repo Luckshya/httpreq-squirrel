@@ -11,7 +11,7 @@ extern std::mutex sq_guard;
 extern std::vector<std::future<bool>> future_holder;
 
 // ------------------------------------------------------------------------------------------------
-namespace HTTP {
+namespace SqHTTP {
 
    class GetRequest {
 
@@ -31,4 +31,4 @@ namespace HTTP {
 
     }; // Class - Request
 
-} // Namespace - HTTP
+} // Namespace - SqHTTP

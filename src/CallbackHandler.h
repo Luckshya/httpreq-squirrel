@@ -12,7 +12,7 @@ extern std::mutex sq_guard;
 extern std::vector<std::future<bool>> future_holder;
 
 // ------------------------------------------------------------------------------------------------
-namespace HTTP
+namespace SqHTTP
 {
 	void Event_onDataReceived(std::string regTag, std::string url, std::string text, unsigned int statusCode);
-} // Namespace - HTTP
+} // Namespace - SqHTTP

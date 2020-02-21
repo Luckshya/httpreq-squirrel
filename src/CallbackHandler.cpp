@@ -10,19 +10,19 @@
 using namespace Sqrat;
 
 // ------------------------------------------------------------------------------------------------
-namespace HTTP
+namespace SqHTTP
 {
 	void Event_onDataReceived(std::string regTag, std::string url, std::string text, unsigned int statusCode)
 	{
-		OutputDebug("Callback received for HTTP event [onDataReceived]");
+		OutputDebug("Callback received for SqHTTP event [onDataReceived]");
 
 		HSQUIRRELVM vm = DefaultVM::Get();
 
-		Function callback = RootTable(vm).GetFunction("HTTP_onDataReceived");
+		Function callback = RootTable(vm).GetFunction("SqHTTP_onDataReceived");
 
 		if (callback.IsNull())
 		{
-			OutputDebug("Could not find HTTP event [onDataReceived]");
+			OutputDebug("Could not find SqHTTP event [onDataReceived]");
 			callback.Release();
 			return;
 		}
@@ -63,4 +63,4 @@ namespace HTTP
 		// Refresh future to remove the elements that are ready ?
 		refreshFutureHolder();
 	}
-} // Namespace - HTTP
+} // Namespace - SqHTTP

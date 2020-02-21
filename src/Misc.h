@@ -6,9 +6,9 @@
 #include <vector>
 
 // ------------------------------------------------------------------------------------------------
-namespace HTTP {
+namespace SqHTTP {
 	
 	void refreshFutureHolder();
 	void clearFuture();
 
-} // Namespace - HTTP
+} // Namespace - SqHTTP

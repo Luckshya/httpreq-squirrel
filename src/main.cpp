@@ -18,7 +18,7 @@ HSQUIRRELVM v;
 // Global variables (meh)
 PluginFuncs * gFuncs;
 
-uint8_t HTTP_OnSquirrelScriptLoad()
+uint8_t SqHTTP_OnSquirrelScriptLoad()
 {
 	// See if we have any imports from Squirrel
 	size_t size;
@@ -52,8 +52,8 @@ uint8_t HTTP_OnSquirrelScriptLoad()
 
 			Sqrat::Table HTTPcn(v);
 
-			Sqrat::RootTable(v).Bind("HTTP", HTTPcn);
-			HTTP::GetRequest::Register(HTTPcn);
+			Sqrat::RootTable(v).Bind("SqHTTP", HTTPcn);
+			SqHTTP::GetRequest::Register(HTTPcn);
 
 			return 1;
 		}
@@ -65,11 +65,11 @@ uint8_t HTTP_OnSquirrelScriptLoad()
 	return 0;
 }
 
-uint8_t HTTP_OnPluginCommand(uint32_t command_identifier, const char* /*message*/)
+uint8_t SqHTTP_OnPluginCommand(uint32_t command_identifier, const char* /*message*/)
 {
 	switch( command_identifier )
 	{
-		case 0x7D6E22D8: return HTTP_OnSquirrelScriptLoad();
+		case 0x7D6E22D8: return SqHTTP_OnSquirrelScriptLoad();
 
 		default:
 			break;
@@ -78,10 +78,10 @@ uint8_t HTTP_OnPluginCommand(uint32_t command_identifier, const char* /*message*
 	return 1;
 }
 
-uint8_t HTTP_OnServerInitialise()
+uint8_t SqHTTP_OnServerInitialise()
 {
 	printf( "\n" );
-	OutputMsg( "Loaded HTTP Requests module for VC:MP 0.4 by Luckshya." );
+	OutputMsg( "Loaded SqHTTP module for VC:MP 0.4 by Luckshya." );
 
 	return 1;
 }
@@ -98,8 +98,8 @@ EXPORT unsigned int VcmpPluginInit( PluginFuncs* functions, PluginCallbacks* cal
 	gFuncs = functions;
 
 	// Store callback
-	callbacks->OnServerInitialise = HTTP_OnServerInitialise;
-	callbacks->OnPluginCommand = HTTP_OnPluginCommand;
+	callbacks->OnServerInitialise = SqHTTP_OnServerInitialise;
+	callbacks->OnPluginCommand = SqHTTP_OnPluginCommand;
 
 	// Done!
 	return 1;

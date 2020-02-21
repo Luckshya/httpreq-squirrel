@@ -4,7 +4,7 @@
 #include <string>
 
 // ------------------------------------------------------------------------------------------------
-namespace HTTP {
+namespace SqHTTP {
 
     GetRequest::GetRequest() { }
 
@@ -104,4 +104,4 @@ namespace HTTP {
 		);
 	}
 
-} // Namespace - HTTP
+} // Namespace - SqHTTP

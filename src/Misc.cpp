@@ -15,7 +15,7 @@ std::mutex sq_guard;
 std::vector<std::future<bool>> future_holder;
 
 // ------------------------------------------------------------------------------------------------
-namespace HTTP {
+namespace SqHTTP {
 
 	void refreshFutureHolder() {
 
@@ -39,4 +39,4 @@ namespace HTTP {
 		future_holder.clear();
 	}
 
-} // Namespace - HTTP
+} // Namespace - SqHTTP
