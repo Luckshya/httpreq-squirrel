@@ -18,7 +18,7 @@ namespace SqHTTP
 
 		HSQUIRRELVM vm = DefaultVM::Get();
 
-		Function callback = RootTable(vm).GetFunction("SqHTTP_onDataReceived");
+		Function callback = RootTable(vm).GetFunction("HTTP_onDataReceived");
 
 		if (callback.IsNull())
 		{
