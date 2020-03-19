@@ -14,5 +14,5 @@ extern std::vector<std::future<bool>> future_holder;
 // ------------------------------------------------------------------------------------------------
 namespace SqHTTP
 {
-	void Event_onDataReceived(std::string regTag, std::string url, std::string text, unsigned int statusCode);
+	void Event_OnResponse(std::string regTag, std::string url, std::string text, unsigned int statusCode);
 } // Namespace - SqHTTP

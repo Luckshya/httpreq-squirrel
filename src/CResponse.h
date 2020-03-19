@@ -1,8 +1,10 @@
 #pragma once
 
 // ------------------------------------------------------------------------------------------------
-#include "includes.h"
-#include "CResponse.h"
+#include <string>
+#include <vector>
+#include <mutex>
+#include <future>
 
 // ------------------------------------------------------------------------------------------------
 // Container to hold futures
@@ -10,26 +12,16 @@ extern std::vector<std::future<bool>> future_holder;
 
 // ------------------------------------------------------------------------------------------------
 namespace SqHTTP {
-
-	extern std::vector<Response> m_Responses;
-	extern std::mutex m_ResponseGuard;
-
-	class GetRequest {
-
-    public :
+	class Response {
+	public :
+		std::string regTag;
 		std::string url;
-		std::string _tag;
-		long int timeout = -1;
+		std::string text;
+		unsigned int statusCode;
 
-		GetRequest();
+		Response(std::string, std::string, std::string, unsigned int);
 
-		void setURL(std::string);
-		void setTimeout(long int);
-		void setTag(std::string);
-
-		static void Register(Sqrat::Table tb);
-		static SQInteger sendGet(HSQUIRRELVM vm);
-
-    }; // Class - Request
-
+		static void Update();
+		static void Clear();
+	};
 } // Namespace - SqHTTP

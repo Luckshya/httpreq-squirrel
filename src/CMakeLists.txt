@@ -3,6 +3,8 @@ add_library(httprequest04rel SHARED
 	Misc.cpp
 	CRequest.cpp
 	CRequest.h
+	CResponse.cpp
+	CResponse.h
 	CallbackHandler.cpp
 	CallbackHandler.h
 	includes.h

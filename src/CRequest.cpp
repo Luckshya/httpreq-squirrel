@@ -1,5 +1,6 @@
 // ------------------------------------------------------------------------------------------------
 #include "CRequest.h"
+#include "CResponse.h"
 #include "CallbackHandler.h"
 #include <string>
 
@@ -62,16 +63,15 @@ namespace SqHTTP {
 					// Send and wait for the request to comeback with the returned data
 					cpr::Response r = session.Get();
 
-					// Lock the mutex to not allow parallel calling of squirrel functions
+					// Lock the mutex to not allow parallel modification of vector
 					// If locked, it waits for it to get unlocked if being locked by another thread
-					std::lock_guard<std::mutex> lock(sq_guard);
+					std::lock_guard<std::mutex> lock(m_ResponseGuard);
 
-					OutputDebug("Calling [Event_onDataReceived]");
+					// Push the response when ready in the container
+					m_Responses.emplace_back(tag, r.url, r.text, r.status_code);
 
-					// Call squirrel event callback
-					Event_onDataReceived(tag, r.url, r.text, r.status_code);
-
-					OutputDebug("Called [Event_onDataReceived]");
+					// Refresh future to remove the elements that are ready ?
+					refreshFutureHolder();
 				}
 				catch (...) {
 					OutputErr("An Error has occured at [GetRequest] async function => [sendGet]");
@@ -94,7 +94,7 @@ namespace SqHTTP {
 		using namespace Sqrat;
 
 		tb.Bind("GetRequest",
-			Class< GetRequest >(tb.GetVM(), "GetRequest")
+			Class< GetRequest, NoCopy<GetRequest> >(tb.GetVM(), "GetRequest")
 			
 			.Func("setURL", &GetRequest::setURL)
 			.Func("setTimeout", &GetRequest::setTimeout)

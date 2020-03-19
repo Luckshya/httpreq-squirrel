@@ -10,6 +10,8 @@
 
 #include "sqrat.h"
 #include "CRequest.h"
+#include "CResponse.h"
+#include "Misc.h"
 
 // Definitions
 HSQAPI sq;
@@ -17,6 +19,8 @@ HSQUIRRELVM v;
 
 // Global variables (meh)
 PluginFuncs * gFuncs;
+
+using namespace SqHTTP;
 
 uint8_t SqHTTP_OnSquirrelScriptLoad()
 {
@@ -86,6 +90,17 @@ uint8_t SqHTTP_OnServerInitialise()
 	return 1;
 }
 
+void SqHTTP_OnServerFrame(float)
+{
+	Response::Update();
+}
+
+void SqHTTP_OnServerShutdown()
+{
+	clearFuture();
+	Response::Clear();
+}
+
 EXPORT unsigned int VcmpPluginInit( PluginFuncs* functions, PluginCallbacks* callbacks, PluginInfo* info )
 {
 	// Set our plugin information
@@ -100,71 +115,76 @@ EXPORT unsigned int VcmpPluginInit( PluginFuncs* functions, PluginCallbacks* cal
 	// Store callback
 	callbacks->OnServerInitialise = SqHTTP_OnServerInitialise;
 	callbacks->OnPluginCommand = SqHTTP_OnPluginCommand;
+	callbacks->OnServerFrame = SqHTTP_OnServerFrame;
+	callbacks->OnServerShutdown = SqHTTP_OnServerShutdown;
 
 	// Done!
 	return 1;
 }
 
-void OutputDebug( const char * msg )
+namespace SqHTTP
 {
-	#ifdef _DEBUG
-		OutputMsg( msg );
-	#endif
-}
+	void OutputDebug(const char * msg)
+	{
+#ifdef _DEBUG
+		OutputMsg(msg);
+#endif
+	}
 
-void OutputMsg( const char * msg )
-{
-	#if defined(WIN32) || defined(_WIN32)
-		HANDLE hstdout = GetStdHandle( STD_OUTPUT_HANDLE );
+	void OutputMsg(const char * msg)
+	{
+#if defined(WIN32) || defined(_WIN32)
+		HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
 		CONSOLE_SCREEN_BUFFER_INFO csbBefore;
-		GetConsoleScreenBufferInfo( hstdout, &csbBefore );
-		SetConsoleTextAttribute( hstdout, FOREGROUND_GREEN );
+		GetConsoleScreenBufferInfo(hstdout, &csbBefore);
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN);
 		printf("[MODULE]  ");
 
-		SetConsoleTextAttribute( hstdout, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY );
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
 		printf("%s\n", msg);
 
-		SetConsoleTextAttribute( hstdout, csbBefore.wAttributes );
-	#else
-		printf( "%c[0;32m[MODULE]%c[0;37m %s\n", 27, 27, msg );
-	#endif
-}
-
-void OutputErr(const char * msg)
-{
-#ifdef WIN32
-	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	CONSOLE_SCREEN_BUFFER_INFO csbBefore;
-	GetConsoleScreenBufferInfo(hstdout, &csbBefore);
-	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
-	printf("[ERROR]  ");
-
-	SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
-	printf("%s\n", msg);
-
-	SetConsoleTextAttribute(hstdout, csbBefore.wAttributes);
+		SetConsoleTextAttribute(hstdout, csbBefore.wAttributes);
 #else
-	printf("%c[0;31m[ERROR]%c[0;37m %s\n", 27, 27, msg);
+		printf("%c[0;32m[MODULE]%c[0;37m %s\n", 27, 27, msg);
 #endif
-}
+	}
 
-void OutputWarn(const char * msg)
-{
+	void OutputErr(const char * msg)
+	{
 #ifdef WIN32
-	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	CONSOLE_SCREEN_BUFFER_INFO csbBefore;
-	GetConsoleScreenBufferInfo(hstdout, &csbBefore);
-	SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
-	std::cout << "[WARNING] ";
+		CONSOLE_SCREEN_BUFFER_INFO csbBefore;
+		GetConsoleScreenBufferInfo(hstdout, &csbBefore);
+		SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
+		printf("[ERROR]  ");
 
-	SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
-	std::cout << msg << std::endl;
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
+		printf("%s\n", msg);
 
-	SetConsoleTextAttribute(hstdout, csbBefore.wAttributes);
+		SetConsoleTextAttribute(hstdout, csbBefore.wAttributes);
 #else
-	printf("%c[1;33m[WARNING]%c[0;37m %s\n", 27, 27, msg);
+		printf("%c[0;31m[ERROR]%c[0;37m %s\n", 27, 27, msg);
 #endif
-}
+	}
+
+	void OutputWarn(const char * msg)
+	{
+#ifdef WIN32
+		HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+		CONSOLE_SCREEN_BUFFER_INFO csbBefore;
+		GetConsoleScreenBufferInfo(hstdout, &csbBefore);
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+		std::cout << "[WARNING] ";
+
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
+		std::cout << msg << std::endl;
+
+		SetConsoleTextAttribute(hstdout, csbBefore.wAttributes);
+#else
+		printf("%c[1;33m[WARNING]%c[0;37m %s\n", 27, 27, msg);
+#endif
+	}
+} // Namespace - SqHTTP

@@ -23,7 +23,10 @@
 	#define scvprintf vprintf
 #endif
 
-void OutputDebug	( const char * msg );
-void OutputMsg		( const char * msg );
-void OutputErr		( const char * msg );
-void OutputWarn     ( const char * msg );
+namespace SqHTTP
+{
+	void OutputDebug(const char * msg);
+	void OutputMsg(const char * msg);
+	void OutputErr(const char * msg);
+	void OutputWarn(const char * msg);
+} // Namespace - SqHTTP

@@ -8,9 +8,6 @@
 #include <algorithm>
 
 // ------------------------------------------------------------------------------------------------
-// Mutex lock to guard squirrel functionss
-std::mutex sq_guard;
-
 // Container to hold futures
 std::vector<std::future<bool>> future_holder;
 

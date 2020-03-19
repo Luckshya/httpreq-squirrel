@@ -12,55 +12,41 @@ using namespace Sqrat;
 // ------------------------------------------------------------------------------------------------
 namespace SqHTTP
 {
-	void Event_onDataReceived(std::string regTag, std::string url, std::string text, unsigned int statusCode)
+	void Event_OnResponse(std::string regTag, std::string url, std::string text, unsigned int statusCode)
 	{
-		OutputDebug("Callback received for SqHTTP event [onDataReceived]");
-
 		HSQUIRRELVM vm = DefaultVM::Get();
 
-		Function callback = RootTable(vm).GetFunction("HTTP_onDataReceived");
+		Function callback = RootTable(vm).GetFunction("HTTP_OnResponse");
 
 		if (callback.IsNull())
 		{
-			OutputDebug("Could not find SqHTTP event [onDataReceived]");
 			callback.Release();
 			return;
 		}
 
 		try
 		{
-			OutputDebug("Calling HTTP event [onDataReceived]");
-
 			callback.Execute(regTag, url, statusCode, text);
-
-			OutputDebug("Called HTTP event [onDataReceived]");
 		}
 		catch (Sqrat::Exception& e)
 		{
 			std::ostringstream error;
-			error << "Discord event [DATA RECEIVED] => Squirrel error [" << e.what() << "]";
+			error << "HTTP event [ON RESPONSE] => Squirrel error [" << e.what() << "]";
 
 			OutputErr(error.str().c_str());
 		}
 		catch (const std::exception& e)
 		{
 			std::ostringstream error;
-			error << "Discord event [DATA RECEIVED] => Program error [" << e.what() << "]";
+			error << "HTTP event [ON RESPONSE] => Program error [" << e.what() << "]";
 
 			OutputErr(error.str().c_str());
 		}
 		catch (...)
 		{
-			OutputErr("Discord event [DATA RECEIVED] => Unknown error");
+			OutputErr("HTTP event [ON RESPONSE] => Unknown error");
 		}
 
-		OutputDebug("Releasing callback of [onDataReceived]");
-
 		callback.Release();
-
-		OutputDebug("Released callback of [onDataReceived]");
-
-		// Refresh future to remove the elements that are ready ?
-		refreshFutureHolder();
 	}
 } // Namespace - SqHTTP
