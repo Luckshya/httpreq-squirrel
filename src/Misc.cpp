@@ -31,8 +31,8 @@ namespace SqHTTP {
 					std::remove_if(future_holder.begin(), future_holder.end(), [](std::future<bool> & fr) {
 					return fr.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
 				}),
-					future_holder.end()
-					);
+				future_holder.end()
+				);
 			}
 
 			std::ostringstream msg2;
@@ -44,6 +44,8 @@ namespace SqHTTP {
 	void clearFuture() {
 		if (!future_holder.empty()) {
 			std::lock_guard<std::mutex> lock(m_futureGuard);
+
+			// Remember this makes the current thread wait for the request to get completed first
 			future_holder.clear();
 		}
 	}

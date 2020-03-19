@@ -71,10 +71,6 @@ namespace SqHTTP {
 						// Push the response when ready in the container
 						m_Responses.emplace_back(tag, r.url, r.text, r.status_code);
 					}
-
-					std::lock_guard<std::mutex> lockB(m_futureGuard);
-					// Refresh future to remove the elements that are ready ?
-					refreshFutureHolder();
 				}
 				catch (...) {
 					OutputErr("An Error has occured at [GetRequest] async function => [sendGet]");
@@ -83,6 +79,9 @@ namespace SqHTTP {
 				// Specify that the request is complete and value is returned
 				return true;
 			}));
+
+			// Refresh future to remove the elements that are ready ?
+			refreshFutureHolder();
 		}
 		catch (...)
 		{
