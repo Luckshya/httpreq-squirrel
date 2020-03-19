@@ -63,13 +63,16 @@ namespace SqHTTP {
 					// Send and wait for the request to comeback with the returned data
 					cpr::Response r = session.Get();
 
-					// Lock the mutex to not allow parallel modification of vector
-					// If locked, it waits for it to get unlocked if being locked by another thread
-					std::lock_guard<std::mutex> lock(m_ResponseGuard);
+					{
+						// Lock the mutex to not allow parallel modification of vector
+						// If locked, it waits for it to get unlocked if being locked by another thread
+						std::lock_guard<std::mutex> lock(m_ResponseGuard);
 
-					// Push the response when ready in the container
-					m_Responses.emplace_back(tag, r.url, r.text, r.status_code);
+						// Push the response when ready in the container
+						m_Responses.emplace_back(tag, r.url, r.text, r.status_code);
+					}
 
+					std::lock_guard<std::mutex> lockB(m_futureGuard);
 					// Refresh future to remove the elements that are ready ?
 					refreshFutureHolder();
 				}

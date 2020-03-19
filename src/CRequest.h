@@ -5,6 +5,9 @@
 #include "CResponse.h"
 
 // ------------------------------------------------------------------------------------------------
+// Mutex guard for future container
+extern std::mutex m_futureGuard;
+
 // Container to hold futures
 extern std::vector<std::future<bool>> future_holder;
 
