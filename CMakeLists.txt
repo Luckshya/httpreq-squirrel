@@ -26,7 +26,7 @@ include(buildtools/cmake/DownloadProject.cmake)
 download_project(
 	PROJ           cpr
 	GIT_REPOSITORY https://github.com/whoshuu/cpr.git
-	GIT_TAG        master
+	GIT_TAG        b748095
 	SOURCE_DIR     ${PROJECT_SOURCE_DIR}/cpr
 	UPDATE_DISCONNECTED 1
 )
